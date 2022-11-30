@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Attach-Mapper">
+	<select id="selectAttachByNoticeNo" resultType="attach">
+		select * 
+		from attach 
+		where noticeNo = #{noticeNo}
+	</select>	
+	
+	<select id="selectAttachByAttachNo" resultType="attach">
+		select *
+		from attach
+		where attachNo=#{attachNo}
+	</select>
+	
+	<select id="selectAttachSequenceNextValue" resultType="int">
+		select attach_seq.nextVal
+		from dual
+	</select>
+	
+	<update id="insertAttach">
+		insert into 
+		attach (attach_no, upload_path, file_name, file_type, notice_no, attacher)
+		values (attach_seq.nextval, #{uploadPath}, #{fileName},#{fileType}, 
+				#{noticeNo},#{attacher} )
+	</update>
+	<update id="deleteAttach">
+		delete from attach where attachNo = #{attachNo}
+	</update>
+	
+	<update id="deleteAllAttach">
+		delete 
+		from attach 
+		where noticeNo = #{noticeNo}
+	</update>
+</mapper>  
+
+
+
+
+
+

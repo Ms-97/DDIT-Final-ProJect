@@ -1,0 +1,138 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member-Mapper">
+	 <sql id="search">	
+		<if test="searchType == 'i'.toString()">
+			and mem_id like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and mem_phone like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'e'.toString()">
+			and mem_mail like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'n'.toString()">
+			and mem_name like '%'||#{keyword}||'%'
+		</if>			
+	</sql>	
+	 <sql id="registOptionAuthority">	
+		<if test="typeAuthority == 'n'.toString()">
+			'n' || TO_CHAR(LPAD(mem_authority_normal_seq.nextval,6,0))
+		</if>
+		<if test="typeAuthority == 'd'.toString()">
+			'd' || TO_CHAR(LPAD(mem_authority_doctor_seq.nextval,6,0))
+		</if>
+		<if test="typeAuthority == 'a'.toString()">
+			'a' || TO_CHAR(LPAD(mem_authority_admin_seq.nextval,6,0))
+		</if>
+	</sql>	
+	 <sql id="authority">	
+		<if test="typeAuthority == 'n'.toString()">
+			'ROLE_USER'
+		</if>
+		<if test="typeAuthority == 'd'.toString()">
+			'ROLE_MANAGER'
+		</if>
+		<if test="typeAuthority == 'a'.toString()">
+			'ROLE_ADMIN'
+		</if>
+	</sql>	
+	
+	<select id="selectMemberList" resultType="member">
+		select
+		* 
+		from member
+		where mem_id is not null
+<!-- 		<include refid="search" /> -->
+		order by mem_logindate desc
+	</select>
+	<select id="selectMemberListCount" resultType="int">
+		select
+		count(*) 
+		from member
+		where mem_id is not null
+		<include refid="search" />
+	</select>
+	<select id="selectMemberById" parameterType="str" resultType="member">
+		select
+		*
+		from member
+		where mem_id=#{id}
+	</select>
+	<select id="selectMemberByPicture" parameterType="str" resultType="file">
+		select
+		*
+		from "FILE"
+		where file_no=#{mem_pic}
+	</select>
+	
+	<select id="selectMemberDoctorList" resultType="member">
+		select
+		* 
+		from member
+		where MEM_OFCPS like '전문의'
+	</select>
+	
+	<select id="selectNewMember" resultType="str">
+		select
+		<include refid="registOptionAuthority" />
+		from dual
+	</select>
+	
+	
+	<update id="insertMember" parameterType="hashMap">
+		insert into 
+		member(mem_id, mem_pwd, mem_mail, mem_phone,mem_name,mem_regdate,mem_authority,MEM_OFCPS,MEM_RSPOFC,MEM_PIC,MEM_FACE,MEM_FINGER)
+		values(
+		#{member.memId},'${member.memPwd}',#{member.memMail},#{member.memPhone},#{member.memName},#{member.memRegdate},
+		<include refid="authority" />
+		,#{member.memOfcps},#{member.memRspofc},
+		#{member.memId} || 'PP',
+		#{member.memId} || 'FC',
+		#{member.memId} || 'FP'
+		)
+	</update>
+	
+	<update id="updateMember" parameterType="member">
+		update member 
+		set 
+		mem_name=#{memName},mem_mail=#{memMail},mem_phone=#{memPhone},mem_bir=#{memBir},
+		mem_addr=#{memAddr}, mem_addr2=#{memAddr2}, mem_pcode=#{memPcode}
+		where mem_id=#{memId}
+	</update>
+	
+	<update id="deleteMember" parameterType="str" >
+		update member 
+		set 
+		MEM_ENABLED = 0
+		where mem_id=#{mem_id}		
+	</update>
+	
+	<update id="activationMember" parameterType="str" >
+		update member 
+		set 
+		MEM_ENABLED = 1
+		where mem_id=#{mem_id}		
+	</update>
+	
+	<update id="modifyMemPwd" parameterType="member" >
+		update member 
+		set 
+		MEM_PWD = #{memPwd},
+		mem_isfirst = 0
+		where mem_id = #{memId}		
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+

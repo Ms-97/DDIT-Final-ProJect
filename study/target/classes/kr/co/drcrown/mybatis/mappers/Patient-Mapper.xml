@@ -1,0 +1,101 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Patient-Mapper">
+	 <sql id="search">
+		<if test="searchType == 'n'.toString()">
+			AND p.P_NAME LIKE '%'||#{keyword}||'%' OR p.p_no LIKE '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'y'.toString()">
+			AND fn_choSearch(p.P_NAME) LIKE '%'||#{keyword}||'%' OR p.P_NO LIKE '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<select id="selectSearchPatientList" resultType="patient">		
+<!-- 		select * -->
+<!-- 		from( -->
+<!-- 		    select rownum as rnum,SearchNoticeResult.* -->
+<!-- 		    from (  -->
+		    	select *
+				from patient
+				where p_no is not null
+<!-- 				<include refid="search" />				 -->
+				order by p_no
+<!-- 		    )  SearchNoticeResult -->
+<!-- 		    <![CDATA[ -->
+<!-- 		    where rownum <= #{endRow} -->
+<!-- 		    ]]> -->
+<!-- 		) -->
+<!-- 		 <![CDATA[ -->
+<!-- 		where rnum >= #{startRow}		 -->
+<!-- 		 ]]> -->
+	</select>
+	
+	<select id="selectSearchPatientListCount" resultType="int">
+		select 
+		count(*) 
+		from patient
+		where p_no is not null
+<!-- 		<include refid="search" /> -->
+		order by p_name
+		
+	</select>
+	<select id="selectPatientByPatientNo" parameterType="str" resultType="patient">
+		select 
+		* 
+		from patient
+		where p_no=#{pNo}
+	</select>
+
+	<select id="selectPatientBySerchKeyword" parameterType="str" resultType="patient">
+		select *
+		from patient p
+		WHERE 1=1
+		<include refid="search" />
+		order by p_name
+	</select>
+
+
+	<update id="insertPatient" parameterType="patient">
+		insert into 
+		patient(P_NO,P_NAME,P_SFX,P_BIR,P_RNUM,P_TEL,P_ZIPCODE,P_ADDR1,P_ADDR2,P_FDATE,P_LASTDATE,P_INSURANCE,P_VISIT_PATH )
+		values(GET_PCODE('now'),#{pName},#{pSfx},#{pBir},#{pRnum},#{pTel},#{pZipcode},#{pAddr1},#{pAddr2},#{pFdate},#{pLastdate},#{pInsurance},#{pVisitPath})
+	</update>	
+<!--
+	<select id="selectNoticeByImage" resultType="notice">
+		select 
+		* 
+		from notice
+		where content like '%'||#{imageFile}||'%'	
+	</select>	
+	
+	
+	<select id="selectNoticeSequenceNextValue" resultType="int">
+		select notice_seq.nextVal
+		from dual
+	</select>
+	
+	<update id="increaseViewCount" parameterType="int">
+		update notice
+		set viewcnt=viewcnt+1
+		where nno=#{nno}
+	</update>
+	
+	
+	 -->		
+	<update id="updatePatient" parameterType="patient">
+		update patient 
+		set 
+		P_NAME=#{pName},P_SFX=#{pSfx},P_BIR=#{pBir},P_TEL=#{pTel},P_ZIPCODE=#{pZipcode},P_ADDR1=#{pAddr1},P_ADDR2=#{pAddr2},P_MEMO=#{pMemo},P_VISIT_PATH=#{pVisitPath}
+		where P_NO=#{pNo}
+	</update>
+
+	<update id="deletePatient" parameterType="str" >
+		delete 
+		from patient 
+		where p_no=#{pNo}		
+	</update>
+
+	
+</mapper>

@@ -1,0 +1,81 @@
+.loginFormBackground {
+	background-color: #484769;
+}
+
+.loginBoxBackground {
+	background-color: #ffffff;
+}
+.memberDetailBoxBackground {
+	background-color: #ffffff;
+    padding: 3vh 4vw 3vh 4vw;
+}
+
+.editBtn {
+	background-color: #aa1e1e;
+	color: white;
+	text-align: center;
+}
+
+.closeBtn {
+	background-color: #a7a7a7;
+	color: white;
+	text-align: center;
+}
+
+.loginBtn {
+	background-color: #333258;
+	color: white;
+	text-align: center;
+}
+
+.loginOR {
+	text-align: center;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.form-control-input {
+	border: solid 1px;
+}
+
+.login-form-li {
+	list-style: none;
+	float: left;
+	padding: 0 15px;
+}
+
+li[class="login-form-li"]::after {
+	content: "|";
+	float: right;
+	color: #ccc;
+	margin-right: -17px;
+}
+
+li[class="login-form-li"]:last-child::after {
+	content: "";
+}
+
+.input-padding-top{
+	padding-top: 35px;
+}
+
+.white-text{
+	color: white;
+}
+
+.chart-dental-formula{
+	font-size: 8px;
+}
+
+.charListTableInnerWidth{
+	width: 14vw;
+}
+
+#preloader-custom{
+	z-index: 1000;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+}

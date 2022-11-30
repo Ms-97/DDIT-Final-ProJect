@@ -1,0 +1,169 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Booking-Mapper">
+	 <sql id="search">	
+		<if test="searchType == 'i'.toString()">
+			and mem_id like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and mem_phone like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'e'.toString()">
+			and mem_mail like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'n'.toString()">
+			and mem_name like '%'||#{keyword}||'%'			
+		</if>			
+	</sql>	
+	
+	<select id="selectBookingList" resultType="booking">
+		select
+		* 
+		from BOOKING
+		where BOOKING_CODE is not null
+<!-- 		<include refid="search" /> -->
+		order by BOOKING_REGDATE desc
+	</select>
+	<select id="selectBookingListCount" resultType="int">
+		select
+		count(*) 
+		from BOOKING
+		where BOOKING_CODE is not null
+		<include refid="search" />
+	</select>
+	<select id="selectBookingById" parameterType="str" resultType="booking">
+		select
+		*
+		from BOOKING
+		where BOOKING_CODE=#{bookingCode}
+	</select>
+	
+	
+	<select id="selectBookingByDate" parameterType="str" resultType="booking">
+		SELECT b.BOOKING_CODE, b.MEM_ID, b.P_NO, b.BOOKING_REGDATE, b.BOOKING_RDATE, b.BOOKING_CC, b.BOOKING_DOC, b.BOOKING_WRITER, b.BOOKING_STATE_CODE,
+		(SELECT P_RNUM
+				FROM PATIENT p
+				WHERE p.P_NO  = b.P_NO)AS P_RNUM 
+		FROM BOOKING b
+		WHERE BOOKING_REGDATE LIKE TO_DATE(#{bookingRegdate} , 'YYYY-MM-DD')
+		AND BOOKING_STATE_CODE NOT IN('1')
+		order by BOOKING_REGDATE desc
+	</select>
+	
+	<select id="selectcallBookingByDate" parameterType="str" resultType="booking">
+		SELECT BOOKING_CODE, MEM_ID, P_NO, BOOKING_REGDATE, BOOKING_RDATE, BOOKING_CC, BOOKING_DOC, BOOKING_WRITER, BOOKING_STATE_CODE
+		FROM BOOKING
+		WHERE BOOKING_RDATE LIKE TO_DATE(#{bookingRdate} , 'YYYY-MM-DD')
+		AND BOOKING_STATE_CODE like '1'
+		order by BOOKING_REGDATE desc
+	</select>
+	
+	
+	<select id="selectPatientBybookingCode" parameterType="String" resultType="booking">
+		select
+		p.*, b.*
+		from BOOKING b
+        inner join patient p
+        on b.P_NO = P.P_NO
+		where BOOKING_CODE=#{bookingCode}
+	
+	</select>
+	
+	
+	
+	<select id="selectBookingByList" resultType="booking">
+		select
+			b.*, p.P_NAME
+		from BOOKING b
+        inner join patient p
+        on b.P_NO = P.P_NO
+        where BOOKING_STATE_CODE like '1'
+	</select>
+	
+	<update id="insertBooking" parameterType="booking">
+		insert into 
+		BOOKING(BOOKING_CODE,MEM_ID,P_NO,BOOKING_REGDATE,BOOKING_RDATE,BOOKING_CC,BOOKING_DOC,BOOKING_WRITER,BOOKING_STATE_CODE)
+		values(GET_BOOKINGCODE('now'),#{memNo},#{pNo},SYSDATE,#{bookingRdate},#{bookingCc},#{bookingDoc},#{bookingWriter},'1')
+	</update>
+		
+	<update id="insertvisitBooking" parameterType="booking">
+		insert into 
+		BOOKING(BOOKING_CODE,MEM_ID,P_NO,BOOKING_REGDATE,BOOKING_RDATE,BOOKING_CC,BOOKING_DOC,BOOKING_WRITER,BOOKING_STATE_CODE)
+		values(GET_BOOKINGCODE('now'),#{memNo},#{pNo},SYSDATE,SYSDATE,#{bookingCc},#{bookingDoc},#{bookingWriter},'2')
+	</update>	
+	
+	<update id="updateBooking" parameterType="booking">
+		update BOOKING
+		set
+		BOOKING_RDATE =#{bookingRdate}, BOOKING_CC = #{bookingCc}, BOOKING_DOC=#{bookingDoc},BOOKING_WRITER=#{bookingWriter}
+		where BOOKING_CODE=#{bookingCode}	
+	</update>	
+	
+	
+	<update id="deleteBooking" parameterType="str">
+		delete 
+		from BOOKING 
+		where BOOKING_CODE=#{bookingCode}		
+	</update>
+	
+	<select id="selectBookingBypno" parameterType="str" resultType="booking">
+		select
+		*
+		from BOOKING
+		where P_NO=#{pNo}
+		order by BOOKING_REGDATE desc
+	</select>
+	
+	<select id="selectBookingListByState" resultType="bookingStateList">
+	  SELECT p.p_no p_no,
+	         p.p_name p_name,
+	         bs.bs_name bs_name,
+	         p.p_rnum p_rnum
+	    FROM booking b
+	   inner join booking_statecode bs
+	      on b.booking_state_code = bs.bs_code
+	   inner join patient p
+	      on p.p_no = b.p_no
+	   where booking_rdate like TO_DATE(sysdate)
+	   	 and BOOKING_STATE_CODE = 2
+	   order by b.booking_rdate desc, bs.bs_code desc
+	</select>
+	
+<!-- 	<select id="selectMemberByPicture" parameterType="str" resultType="member">
+		select
+		*
+		from member
+		where mem_pic=#{mem_pic}
+	</select>
+	
+	
+	<update id="insertMember" parameterType="member">
+		insert into 
+		member(mem_id, mem_pwd, mem_mail, mem_phone,mem_pic,mem_name,mem_authority)
+		values(#{memId},#{memPwd},#{memMail},#{memPhone},#{memPic},#{memName},#{memAuthority})
+	</update>
+	
+	<update id="updateMember" parameterType="member">
+		update member 
+		set 
+		mem_pwd=#{mem_pwd},mem_mail=#{mem_mail},mem_phone=#{mem_phone},mem_name=#{mem_name},
+		mem_pic=#{mem_pic},mem_enabled=1
+		
+		<if test="authority != null">
+			,mem_authority=#{mem_authority}
+		</if>
+		
+		where mem_id=#{mem_id}
+	</update>
+	
+	<update id="deleteMember" parameterType="str" >
+		delete 
+		from member 
+		where mem_id=#{mem_id}		
+	</update> -->
+	 
+	
+	
+</mapper>

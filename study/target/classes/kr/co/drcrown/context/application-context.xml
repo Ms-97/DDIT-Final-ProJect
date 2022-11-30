@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	
+	
+	
+	
+	<!-- summernote Image Path -->
+	<bean id="imgPath" class="java.lang.String">
+		<constructor-arg value="${summernote.img}" />      
+	</bean>
+	
+	<!-- member.picture -->
+	<bean id="picturePath" class="java.lang.String">
+		<constructor-arg value="${member.picture.upload}" />      
+	</bean>
+	<!-- file upload -->
+	<bean id="xrayUploadPath" class="java.lang.String">
+		<constructor-arg value="${file.upload}"/>
+	</bean>
+	<!-- file upload -->
+	<bean id="fileUploadPath" class="java.lang.String">
+		<constructor-arg value="${notice.upload}"/>
+	</bean>
+			
+
+	
+	<!-- Repository -->	
+	<!-- DAO -->		
+	<bean id="menuDAO" class="kr.co.drcrown.dao.MenuDAOImpl"
+		p:session-ref="sqlSession"			
+	/>
+	<bean id="minfoDAO" class="kr.co.drcrown.dao.MinfoDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+	<bean id="noticeDAO" class="kr.co.drcrown.dao.NoticeDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+	<bean id="memberDAO" class="kr.co.drcrown.dao.MemberDAOImpl"
+		p:session-ref="sqlSession"	
+	/> 
+	<bean id="bookingDAO" class="kr.co.drcrown.dao.BookingDAOImpl"
+		p:session-ref="sqlSession"	
+	/> 
+	<bean id="patientDAO" class="kr.co.drcrown.dao.PatientDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+ 	<bean id="stockDAO" class="kr.co.drcrown.dao.StockDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	<bean id="cureDetailDAO" class="kr.co.drcrown.dao.CureDetailDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+	<bean id="cureDAO" class="kr.co.drcrown.dao.CureDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+	<bean id="fileDAO" class="kr.co.drcrown.dao.FileDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+ 	<bean id="drugInfoDAO" class="kr.co.drcrown.dao.DrugInfoDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+ 	<bean id="diseasesDAO" class="kr.co.drcrown.dao.DiseasesDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+ 	<bean id="manageDAO" class="kr.co.drcrown.dao.ManageDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+ 	<bean id="treatmentListDAO" class="kr.co.drcrown.dao.TreatmentListDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="documentDAO" class="kr.co.drcrown.dao.DocumentDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="attachDAO" class="kr.co.drcrown.dao.AttachDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="patientDiseaseDAO" class="kr.co.drcrown.dao.PatientDiseaseDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="patientTreatmentDAO" class="kr.co.drcrown.dao.PatientTreatmentDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="preOrderDAO" class="kr.co.drcrown.dao.PreOrderDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="patientPrescribedDAO" class="kr.co.drcrown.dao.PatientPrescribedDAOImpl"
+		p:session-ref="sqlSession"
+	/> 
+	<bean id="ptpayDAO" class="kr.co.drcrown.dao.PtpayDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	<bean id="PrescriptionDAO" class="kr.co.drcrown.dao.PrescriptionDAOImpl"
+		p:session-ref="sqlSession"
+	/>  
+	
+	
+	
+	
+		<!-- Service -->		
+	<bean id="menuService" class="kr.co.drcrown.service.MenuServiceImpl" 
+		p:menuDAO-ref="menuDAO"
+	/>
+  	<bean id="minfoService" class="kr.co.drcrown.service.MinfoServiceImpl" 
+		p:minfoDAO-ref="minfoDAO"
+	/> 
+  	<bean id="noticeService" class="kr.co.drcrown.service.NoticeServiceImpl" 
+		p:noticeDAO-ref="noticeDAO"
+		p:attachDAO-ref="attachDAO"
+	/> 
+  	<bean id="memberService" class="kr.co.drcrown.service.MemberServiceImpl" 
+		p:memberDAO-ref="memberDAO"
+		p:bookingDAO-ref="bookingDAO"
+		p:patientDAO-ref="patientDAO"
+		p:fileDAO-ref="fileDAO"
+	/> 
+  	<bean id="bookingService" class="kr.co.drcrown.service.BookingServiceImpl" 
+		p:bookingDAO-ref="bookingDAO"
+	/> 
+  	<bean id="patientService" class="kr.co.drcrown.service.PatientServiceImpl" 
+		p:patientDAO-ref="patientDAO"
+	/> 
+    <bean id="stockService" class="kr.co.drcrown.service.StockServiceImpl" 
+		p:stockDAO-ref="stockDAO"
+	/>
+	<bean id="cureDetailService" class="kr.co.drcrown.service.CureDetailServiceImpl" 
+		p:cureDetailDAO-ref="cureDetailDAO"
+		p:cureDAO-ref="cureDAO"
+		p:patientTreatmentDAO-ref="patientTreatmentDAO"
+		p:patientDiseaseDAO-ref="patientDiseaseDAO"
+		p:patientPrescribedDAO-ref="patientPrescribedDAO"
+		p:fileDAO-ref="fileDAO"
+	/> 
+	<bean id="fileService" class="kr.co.drcrown.service.FileServiceImpl" 
+		p:fileDAO-ref="fileDAO"
+	/> 
+ 	<bean id="drugInfoService" class="kr.co.drcrown.service.DrugInfoServiceImpl" 
+		p:drugInfoDAO-ref="drugInfoDAO"
+	/>
+ 	<bean id="diseasesService" class="kr.co.drcrown.service.DiseasesServiceImpl" 
+		p:diseasesDAO-ref="diseasesDAO"
+	/>  
+ 	<bean id="manageService" class="kr.co.drcrown.service.ManageServiceImpl" 
+		p:manageDAO-ref="manageDAO"
+	/>  
+ 	<bean id="treatmentListService" class="kr.co.drcrown.service.TreatmentListServiceImpl" 
+		p:treatmentListDAO-ref="treatmentListDAO"
+	/>  
+   	<bean id="documentService" class="kr.co.drcrown.service.DocumentServiceImpl" 
+		p:documentDAO-ref="documentDAO"
+		p:patientDAO-ref="patientDAO"
+	/>
+	<bean id="ptpayService" class="kr.co.drcrown.service.PtpayServiceImpl"
+		p:ptpayDAO-ref="ptpayDAO"
+	/> 
+	<bean id="preOrdertService" class="kr.co.drcrown.service.PreOrderServiceImpl" 
+		p:preOrderDAO-ref="preOrderDAO"
+	/>
+	<bean id="patientPrescribedService" class="kr.co.drcrown.service.PatientPrescribedServiceImpl" 
+		p:cureDetailDAO-ref="cureDetailDAO"
+		p:patientPrescribedDAO-ref="patientPrescribedDAO"
+	/>
+	<bean id="PrescriptionService" class="kr.co.drcrown.service.PrescriptionServiceImpl" 
+		p:prescriptionDAO-ref="PrescriptionDAO"
+	/>
+	
+</beans>
